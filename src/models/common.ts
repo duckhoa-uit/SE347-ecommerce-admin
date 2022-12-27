@@ -59,7 +59,7 @@ export interface ResponseListData<T> {
    data: T[]
    pagination: PaginationParams
    errorCode: Number
-   messgae: string
+   message: string
 }
 
 // EXTENDS

@@ -1,5 +1,6 @@
 import { PaginationParams } from 'models'
-
+import forEach from 'lodash/forEach'
+import isEmpty from 'lodash/isEmpty'
 declare global {
    interface Navigator {
       msSaveBlob?: (blob: any, defaultName?: string) => boolean
@@ -47,14 +48,24 @@ export const renderPaginationText = (pagination: PaginationParams) => {
       }–${!isLastIndex ? pagination.currentPage * pagination.pageSize : pagination.totalItems} of ${pagination.totalItems
       } results`
 }
-const objectKeys = <Obj extends {}>(obj: Obj): (keyof Obj)[] => {
-   return Object.keys(obj) as (keyof Obj)[]
-}
-export const transformObjToFormData = (obj: Object) => {
-   const formData = new FormData();
-   objectKeys(obj).forEach(key => {
-      if (typeof obj[key] !== 'object') formData.append(key, obj[key])
-      else formData.append(key, JSON.stringify(obj[key]))
+export const transformObjToFormData = (obj: Object, formData = (new FormData), _parentKey?: string) => {
+   const parentKey = _parentKey ? _parentKey : null
+   forEach(obj, (value, key) => {
+      if (value === null) return; // else "null" will be added
+
+      let formattedKey = isEmpty(parentKey) ? key : `${parentKey}[${key}]`;
+
+      if (value instanceof File) {
+         formData.set(formattedKey, value);
+      } else if (value instanceof Array) {
+         forEach(value, (ele) => {
+            formData.append(`${formattedKey}`, (ele))
+         });
+      } else if (value instanceof Object) {
+         transformObjToFormData(value, formData, formattedKey)
+      } else {
+         formData.set(formattedKey, value)
+      }
    })
-   return formData;
+   return formData
 }

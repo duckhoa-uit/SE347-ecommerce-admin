@@ -1,10 +1,9 @@
 import { InputProps, TextField, TextFieldProps } from '@mui/material'
 import React, { InputHTMLAttributes } from 'react'
-import { Control, useController } from 'react-hook-form'
+import { Control, useController, useFormContext } from 'react-hook-form'
 
 export type CustomTextFieldProps = {
    name: string
-   control: Control<any>
    label?: string
    disabled?: boolean
    multiline?: boolean
@@ -14,7 +13,6 @@ export type CustomTextFieldProps = {
 
 export function CustomTextField({
    name,
-   control,
    label,
    disabled = false,
    multiline = false,
@@ -23,6 +21,8 @@ export function CustomTextField({
    InputProps,
    ...restProps
 }: CustomTextFieldProps) {
+   const { control } = useFormContext()
+
    const {
       field: { value, onChange, onBlur, ref },
       fieldState: { error }

@@ -2,7 +2,7 @@ import { FormControl, FormHelperText, InputLabel, MenuItem } from '@mui/material
 import Select, { SelectChangeEvent, SelectProps } from '@mui/material/Select'
 import { Theme, useTheme } from '@mui/material/styles'
 import React from 'react'
-import { Control, useController } from 'react-hook-form'
+import { Control, useController, useFormContext } from 'react-hook-form'
 
 export interface SelectOption {
    label?: string
@@ -11,7 +11,6 @@ export interface SelectOption {
 
 export interface CustomSelectFieldProps extends SelectProps {
    name: string
-   control: Control<any>
    label?: string
    disabled?: boolean
    multiple?: boolean
@@ -38,7 +37,6 @@ function getStyles(option: SelectOption, options: readonly SelectOption[], theme
 
 export function CustomSelectField({
    name,
-   control,
    label,
    disabled,
    options,
@@ -46,6 +44,7 @@ export function CustomSelectField({
    ...rest
 }: CustomSelectFieldProps) {
    const theme = useTheme()
+   const { control } = useFormContext()
 
    const handleChange = (event: SelectChangeEvent<string>) => {
       const {

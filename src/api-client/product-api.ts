@@ -10,18 +10,17 @@ export const productApi = {
       return axiosClient.get(`products/${id}`)
    },
    update(productId: string, payload: Partial<ProductPayload>): Promise<ResponseData<Product>> {
+      const formData = transformObjToFormData(payload)
+      // payload.images ? payload.images.forEach(file => formData.append('images', file)) : []
+
       return axiosClient.put(`products/${productId}`, payload)
    },
    add(product: ProductPayload): Promise<ResponseData<Product>> {
       // const payload = ProductPayloadWithoutImages(product)
-      const formData = transformObjToFormData(product)
-      product.images.forEach(file => formData.append('images', file))
+      // const formData = transformObjToFormData(product)
+      // product.images.forEach(file => formData.append('images', file))
 
-      return axiosClient.post(`products`, formData, {
-         headers: {
-            "Content-Type": "multipart/form-data"
-         }
-      })
+      return axiosClient.post(`products`, product)
    },
    delete(id: string): Promise<ResponseData<string>> {
       return axiosClient.delete(`products/${id}`)

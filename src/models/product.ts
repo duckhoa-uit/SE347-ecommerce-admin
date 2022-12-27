@@ -1,4 +1,5 @@
 import { makeKeyRemover } from "./common"
+import { Media } from "./media"
 
 export interface Product {
    _id: string
@@ -17,6 +18,7 @@ export interface Product {
    deleted?: boolean
    createdAt: string
    updatedAt: string
+   images: Media[]
 }
 export interface ProductPayload {
    _id: string
@@ -26,7 +28,7 @@ export interface ProductPayload {
    categories?: string[]
    price: number | null
    quantity: number | null
-   images: File[]
+   images: Array<File | Media>
 }
 
 export interface ProductQueryParams extends Record<keyof Product, string> {
