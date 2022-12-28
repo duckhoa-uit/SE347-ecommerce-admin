@@ -37,9 +37,18 @@ export default function handler(
          })
          proxyRes.on('end', function () {
             try {
+               const parsedBody = JSON.parse(body)
                const {
-                  data: { accessToken, user },
-               } = JSON.parse(body)
+                  data,
+                  errorCode
+               } = parsedBody
+               if (errorCode !== 0) {
+                  ; (res as NextApiResponse).status(200).json(parsedBody)
+                  resolve(true)
+               }
+
+               const { accessToken } = data
+
                //set cookies
                const cookies = new Cookies(req, res, {
                   secure: process.env.NODE_ENV !== 'development',
@@ -48,9 +57,10 @@ export default function handler(
                   httpOnly: true,
                   sameSite: 'lax',
                })
-               ;(res as NextApiResponse).status(200).json(body)
+                  ; (res as NextApiResponse).status(200).json(parsedBody)
             } catch (error) {
-               ;(res as NextApiResponse).status(res.statusCode).json(body)
+               const parsedBody = JSON.parse(body)
+                  ; (res as NextApiResponse).status(res.statusCode).json(parsedBody)
             }
 
             resolve(true)

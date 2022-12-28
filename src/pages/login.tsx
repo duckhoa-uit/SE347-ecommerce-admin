@@ -38,6 +38,7 @@ const Login = () => {
       await login(_data)
       router.push('/')
     } catch (error: any) {
+      console.log('🚀 ~ file: login.tsx:41 ~ handleClickLogin ~ error', error)
       enqueueSnackbar(error.message, {
         variant: 'error'
       })
